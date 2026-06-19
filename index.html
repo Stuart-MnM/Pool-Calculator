@@ -96,7 +96,7 @@
   <p class="dims">Pool size: <span>5m × 9m</span></p>
 
   <label for="depth">Depth (metres)</label>
-  <input id="depth" type="number" inputmode="decimal" step="0.01" min="0" placeholder="e.g. 1.5">
+  <input id="depth" type="text" inputmode="decimal" placeholder="e.g. 1,5 or 1.5">
 
   <div class="result">
     <div class="num" id="litres">0</div>
@@ -114,7 +114,7 @@
   const cubicEl = document.getElementById('cubic');
 
   function calculate(){
-    const depth = parseFloat(depthInput.value);
+    const depth = parseFloat(depthInput.value.replace(',', '.'));
     if (isNaN(depth) || depth < 0){
       litresEl.textContent = '0';
       cubicEl.textContent = '0 m³';
