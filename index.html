@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f6fb0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pool Fill">
+<title>Pool Fill Calculator</title>
+<style>
+  :root{
+    --blue-deep:#0a3d62;
+    --blue-mid:#0f6fb0;
+    --blue-light:#e6f3fa;
+    --ink:#0a2433;
+    --paper:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(160deg,var(--blue-light) 0%,#cfe9f7 100%);
+    color:var(--ink);
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:380px;
+    background:var(--paper);
+    padding:28px 24px 32px;
+    border-radius:20px;
+    box-shadow:0 12px 30px rgba(10,61,98,.18);
+  }
+  h1{
+    font-size:22px;
+    margin:0 0 4px;
+    letter-spacing:-0.2px;
+  }
+  .dims{
+    margin:0 0 20px;
+    font-size:14px;
+    color:#5b7a8c;
+  }
+  .dims span{font-weight:600;color:var(--blue-deep)}
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--blue-deep);
+    margin-bottom:6px;
+  }
+  input{
+    width:100%;
+    padding:14px;
+    font-size:20px;
+    border:2px solid #d7e8f0;
+    border-radius:12px;
+    outline:none;
+    -webkit-appearance:none;
+  }
+  input:focus{border-color:var(--blue-mid)}
+  .result{
+    margin-top:22px;
+    padding:18px;
+    border-radius:14px;
+    background:var(--blue-light);
+    text-align:center;
+  }
+  .result .num{
+    font-size:32px;
+    font-weight:700;
+    color:var(--blue-deep);
+    line-height:1.1;
+  }
+  .result .unit{
+    font-size:14px;
+    color:#5b7a8c;
+    margin-top:2px;
+  }
+  .sub{
+    margin-top:8px;
+    font-size:13px;
+    color:#5b7a8c;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Pool Fill Calculator</h1>
+  <p class="dims">Pool size: <span>5m × 9m</span></p>
+
+  <label for="depth">Depth (metres)</label>
+  <input id="depth" type="number" inputmode="decimal" step="0.01" min="0" placeholder="e.g. 1.5">
+
+  <div class="result">
+    <div class="num" id="litres">0</div>
+    <div class="unit">Litres</div>
+  </div>
+  <p class="sub" id="cubic">0 m³</p>
+</div>
+
+<script>
+  const WIDTH = 5;
+  const LENGTH = 9;
+
+  const depthInput = document.getElementById('depth');
+  const litresEl = document.getElementById('litres');
+  const cubicEl = document.getElementById('cubic');
+
+  function calculate(){
+    const depth = parseFloat(depthInput.value);
+    if (isNaN(depth) || depth < 0){
+      litresEl.textContent = '0';
+      cubicEl.textContent = '0 m³';
+      return;
+    }
+    const cubicMetres = WIDTH * LENGTH * depth;
+    const litres = cubicMetres * 1000;
+    litresEl.textContent = litres.toLocaleString();
+    cubicEl.textContent = cubicMetres.toLocaleString(undefined, {maximumFractionDigits:2}) + ' m³';
+  }
+
+  depthInput.addEventListener('input', calculate);
+  calculate();
+</script>
+</body>
+</html>
