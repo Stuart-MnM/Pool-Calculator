@@ -3,131 +3,389 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0f6fb0">
+<meta name="theme-color" content="#03045e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Pool Fill">
 <title>Pool Fill Calculator</title>
 <style>
-  :root{
-    --blue-deep:#0a3d62;
-    --blue-mid:#0f6fb0;
-    --blue-light:#e6f3fa;
-    --ink:#0a2433;
-    --paper:#ffffff;
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@500&display=swap');
+
+  :root {
+    --navy:   #03045e;
+    --blue:   #0096c7;
+    --aqua:   #48cae4;
+    --pale:   #caf0f8;
+    --sand:   #fdf6ec;
+    --tile:   #e0f4fb;
+    --ink:    #03045e;
+    --muted:  #5a7f90;
+    --white:  #ffffff;
   }
-  *{box-sizing:border-box}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(160deg,var(--blue-light) 0%,#cfe9f7 100%);
-    color:var(--ink);
-    padding:24px;
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    min-height: 100vh;
+    background: var(--sand);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 40px;
   }
-  .card{
-    width:100%;
-    max-width:380px;
-    background:var(--paper);
-    padding:28px 24px 32px;
-    border-radius:20px;
-    box-shadow:0 12px 30px rgba(10,61,98,.18);
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
   }
-  h1{
-    font-size:22px;
-    margin:0 0 4px;
-    letter-spacing:-0.2px;
+  .header h1 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
-  .dims{
-    margin:0 0 20px;
-    font-size:14px;
-    color:#5b7a8c;
+  .header p {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-top: 2px;
+    letter-spacing: -0.5px;
   }
-  .dims span{font-weight:600;color:var(--blue-deep)}
-  label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    color:var(--blue-deep);
-    margin-bottom:6px;
+
+  /* ── Card ── */
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 380px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(3,4,94,.13), 0 4px 12px rgba(3,4,94,.07);
   }
-  input{
-    width:100%;
-    padding:14px;
-    font-size:20px;
-    border:2px solid #d7e8f0;
-    border-radius:12px;
-    outline:none;
-    -webkit-appearance:none;
+
+  /* ── Pool visualiser ── */
+  .pool-wrap {
+    background: var(--tile);
+    padding: 24px 28px 18px;
+    position: relative;
   }
-  input:focus{border-color:var(--blue-mid)}
-  .result{
-    margin-top:22px;
-    padding:18px;
-    border-radius:14px;
-    background:var(--blue-light);
-    text-align:center;
+  .pool-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .result .num{
-    font-size:32px;
-    font-weight:700;
-    color:var(--blue-deep);
-    line-height:1.1;
+  .pool-label span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
   }
-  .result .unit{
-    font-size:14px;
-    color:#5b7a8c;
-    margin-top:2px;
+  .pool-svg-wrap {
+    display: flex;
+    justify-content: center;
   }
-  .sub{
-    margin-top:8px;
-    font-size:13px;
-    color:#5b7a8c;
-    text-align:center;
+  #poolSvg {
+    display: block;
+    border-radius: 10px;
+    overflow: visible;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .row { display: flex; gap: 12px; }
+  .field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .field.full { flex: unset; width: 100%; }
+
+  label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  select, input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--navy);
+    background: var(--sand);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 11px 14px;
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7f90' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  select:focus, input:focus {
+    border-color: var(--aqua);
+    background-color: #f0fafd;
+  }
+  input::placeholder { color: #b0c8d4; }
+
+  /* ── Result ── */
+  .result-wrap {
+    background: linear-gradient(135deg, var(--navy) 0%, #0077b6 100%);
+    margin: 0 24px 24px;
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .result-main {
+    display: flex;
+    flex-direction: column;
+  }
+  .result-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .result-unit {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--aqua);
+    margin-top: 4px;
+  }
+  .result-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    color: rgba(255,255,255,0.5);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .result-sub span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 2px;
   }
 </style>
 </head>
 <body>
-<div class="card">
+
+<div class="header">
   <h1>Pool Fill Calculator</h1>
-  <p class="dims">Pool size: <span>5m × 9m</span></p>
+  <p>How much water do you need?</p>
+</div>
 
-  <label for="depth">Depth (metres)</label>
-  <input id="depth" type="text" inputmode="decimal" placeholder="e.g. 1,5 or 1.5">
+<div class="card">
 
-  <div class="result">
-    <div class="num" id="litres">0</div>
-    <div class="unit">Litres</div>
+  <!-- Pool top-down visualiser -->
+  <div class="pool-wrap">
+    <div class="pool-label">
+      Top-down view <span id="dimLabel">5m × 9m</span>
+    </div>
+    <div class="pool-svg-wrap">
+      <svg id="poolSvg" width="260" height="140" viewBox="0 0 260 140">
+        <defs>
+          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#48cae4"/>
+            <stop offset="100%" stop-color="#0096c7"/>
+          </linearGradient>
+          <linearGradient id="tileGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#caf0f8"/>
+            <stop offset="100%" stop-color="#ade8f4"/>
+          </linearGradient>
+          <pattern id="tiles" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+            <rect width="14" height="14" fill="url(#tileGrad)"/>
+            <rect width="13" height="13" fill="none" stroke="white" stroke-width="0.8" opacity="0.6"/>
+          </pattern>
+          <clipPath id="poolClip">
+            <rect id="clipRect" x="0" y="0" width="260" height="140" rx="10"/>
+          </clipPath>
+        </defs>
+        <!-- pool surround -->
+        <rect id="poolOuter" x="0" y="0" width="260" height="140" rx="10" fill="#b8dce8"/>
+        <!-- water -->
+        <rect id="poolInner" x="10" y="10" width="240" height="120" rx="6" fill="url(#tiles)"/>
+        <!-- water overlay -->
+        <rect id="poolWater" x="10" y="10" width="240" height="120" rx="6" fill="url(#waterGrad)" opacity="0.82"/>
+        <!-- lane lines -->
+        <line id="lane1" x1="10" y1="50" x2="250" y2="50" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
+        <line id="lane2" x1="10" y1="90" x2="250" y2="90" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
+        <!-- dimension arrows -->
+        <!-- width arrow -->
+        <line x1="15" y1="134" x2="245" y2="134" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
+        <text id="wLabel" x="130" y="133" text-anchor="middle" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500" dy="-2">9 m</text>
+        <!-- height arrow -->
+        <line x1="255" y1="15" x2="255" y2="125" stroke="#0096c7" stroke-width="1.5"/>
+        <text id="hLabel" x="258" y="74" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500" writing-mode="tb">5 m</text>
+        <defs>
+          <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M6,3 L0,0 L0,6 Z" fill="#0096c7"/>
+          </marker>
+          <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+            <path d="M0,3 L6,0 L6,6 Z" fill="#0096c7"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
   </div>
-  <p class="sub" id="cubic">0 m³</p>
+
+  <div class="controls">
+    <!-- Width + Length -->
+    <div class="row">
+      <div class="field">
+        <label for="selWidth">Width</label>
+        <select id="selWidth" onchange="updateAll()"></select>
+      </div>
+      <div class="field">
+        <label for="selLength">Length</label>
+        <select id="selLength" onchange="updateAll()"></select>
+      </div>
+    </div>
+
+    <!-- Depth -->
+    <div class="field full">
+      <label for="depth">Depth</label>
+      <input id="depth" type="text" inputmode="decimal" placeholder="e.g. 1,5 or 1.5 metres" oninput="updateAll()">
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-wrap">
+    <div class="result-main">
+      <div class="result-num" id="litres">0</div>
+      <div class="result-unit">Litres</div>
+    </div>
+    <div class="result-sub">
+      <span>Volume</span>
+      <span id="cubic">0 m³</span>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  const WIDTH = 5;
-  const LENGTH = 9;
+  // ── Populate dropdowns ──────────────────────────────────────
+  const selW = document.getElementById('selWidth');
+  const selL = document.getElementById('selLength');
 
-  const depthInput = document.getElementById('depth');
-  const litresEl = document.getElementById('litres');
-  const cubicEl = document.getElementById('cubic');
+  for (let i = 2; i <= 20; i++) {
+    const ow = document.createElement('option');
+    ow.value = i; ow.textContent = i + ' m';
+    if (i === 5) ow.selected = true;
+    selW.appendChild(ow);
 
-  function calculate(){
-    const depth = parseFloat(depthInput.value.replace(',', '.'));
-    if (isNaN(depth) || depth < 0){
-      litresEl.textContent = '0';
-      cubicEl.textContent = '0 m³';
-      return;
-    }
-    const cubicMetres = WIDTH * LENGTH * depth;
-    const litres = cubicMetres * 1000;
-    litresEl.textContent = litres.toLocaleString();
-    cubicEl.textContent = cubicMetres.toLocaleString(undefined, {maximumFractionDigits:2}) + ' m³';
+    const ol = document.createElement('option');
+    ol.value = i; ol.textContent = i + ' m';
+    if (i === 9) ol.selected = true;
+    selL.appendChild(ol);
   }
 
-  depthInput.addEventListener('input', calculate);
-  calculate();
+  // ── SVG references ──────────────────────────────────────────
+  const svgEl    = document.getElementById('poolSvg');
+  const wLabel   = document.getElementById('wLabel');
+  const hLabel   = document.getElementById('hLabel');
+  const dimLabel = document.getElementById('dimLabel');
+  const lane1    = document.getElementById('lane1');
+  const lane2    = document.getElementById('lane2');
+
+  // ── Update SVG pool shape to match W × L ───────────────────
+  function updateSvg(w, l) {
+    // Map real dimensions to SVG canvas (max 260×140 usable)
+    const maxSvgW = 240, maxSvgH = 120;
+    const scale = Math.min(maxSvgW / Math.max(w, l), maxSvgH / Math.max(w, l));
+    const svgW  = Math.round(l * scale);   // length = horizontal
+    const svgH  = Math.round(w * scale);   // width  = vertical
+    const padX  = Math.round((260 - svgW) / 2);
+    const padY  = Math.round((140 - svgH) / 2);
+
+    const inner = document.getElementById('poolInner');
+    const outer = document.getElementById('poolOuter');
+    const water = document.getElementById('poolWater');
+    const clipR = document.getElementById('clipRect');
+
+    outer.setAttribute('x', padX - 8); outer.setAttribute('y', padY - 8);
+    outer.setAttribute('width', svgW + 16); outer.setAttribute('height', svgH + 16);
+
+    [inner, water].forEach(el => {
+      el.setAttribute('x', padX); el.setAttribute('y', padY);
+      el.setAttribute('width', svgW); el.setAttribute('height', svgH);
+    });
+
+    // Lane lines (horizontal thirds)
+    const t1 = padY + svgH / 3, t2 = padY + (2 * svgH) / 3;
+    lane1.setAttribute('x1', padX); lane1.setAttribute('x2', padX + svgW);
+    lane1.setAttribute('y1', t1);   lane1.setAttribute('y2', t1);
+    lane2.setAttribute('x1', padX); lane2.setAttribute('x2', padX + svgW);
+    lane2.setAttribute('y1', t2);   lane2.setAttribute('y2', t2);
+
+    // Labels
+    wLabel.setAttribute('x', padX + svgW / 2);
+    wLabel.setAttribute('y', padY + svgH + 20);
+    wLabel.textContent = l + ' m';
+    hLabel.setAttribute('x', padX + svgW + 10);
+    hLabel.setAttribute('y', padY + svgH / 2 + 15);
+    hLabel.textContent = w + ' m';
+    dimLabel.textContent = w + 'm × ' + l + 'm';
+
+    // Width dimension line
+    const wline = svgEl.querySelector('line[x1="15"]');
+    if(wline){ wline.setAttribute('x1', padX); wline.setAttribute('x2', padX + svgW); wline.setAttribute('y1', padY + svgH + 10); wline.setAttribute('y2', padY + svgH + 10); }
+
+    // Height dimension line
+    const hline = svgEl.querySelectorAll('line')[2];
+    if(hline){ hline.setAttribute('x1', padX + svgW + 6); hline.setAttribute('x2', padX + svgW + 6); hline.setAttribute('y1', padY); hline.setAttribute('y2', padY + svgH); }
+  }
+
+  // ── Calculate + update result ───────────────────────────────
+  function updateAll() {
+    const w = parseFloat(selW.value);
+    const l = parseFloat(selL.value);
+    updateSvg(w, l);
+
+    const raw   = document.getElementById('depth').value.replace(',', '.');
+    const depth = parseFloat(raw);
+    const litresEl = document.getElementById('litres');
+    const cubicEl  = document.getElementById('cubic');
+
+    if (isNaN(depth) || depth < 0) {
+      litresEl.textContent = '0';
+      cubicEl.textContent  = '— m³';
+      return;
+    }
+
+    const m3     = w * l * depth;
+    const litres = m3 * 1000;
+    litresEl.textContent = litres.toLocaleString(undefined, {maximumFractionDigits: 0});
+    cubicEl.textContent  = m3.toLocaleString(undefined, {maximumFractionDigits: 2}) + ' m³';
+  }
+
+  // Init on load
+  updateAll();
 </script>
 </body>
 </html>
