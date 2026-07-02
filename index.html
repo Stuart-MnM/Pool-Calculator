@@ -27,10 +27,8 @@
     font-family: 'DM Sans', -apple-system, sans-serif;
     min-height: 100vh;
     background: var(--sand);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     padding: 24px 16px 40px;
   }
 
@@ -52,18 +50,39 @@
     box-shadow: 0 20px 60px rgba(3,4,94,.13), 0 4px 12px rgba(3,4,94,.07);
   }
 
-  .pool-wrap { background: var(--tile); padding: 24px 28px 18px; }
+  /* Pool visualiser */
+  .pool-wrap { background: var(--tile); padding: 20px 24px 16px; }
   .pool-label {
     font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--muted);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center;
   }
   .pool-label span { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); }
   .pool-svg-wrap { display: flex; justify-content: center; }
   #poolSvg { display: block; overflow: visible; }
 
-  .controls { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+  /* Toggle */
+  .toggle-wrap {
+    padding: 16px 24px 0;
+    display: flex; gap: 8px;
+  }
+  .toggle-btn {
+    flex: 1; padding: 10px 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    border-radius: 10px; border: 2px solid #d7e8f0;
+    background: var(--sand); color: var(--muted);
+    cursor: pointer; transition: all .18s;
+    -webkit-appearance: none; appearance: none; outline: none;
+  }
+  .toggle-btn.active {
+    background: var(--navy); color: var(--white);
+    border-color: var(--navy);
+  }
+
+  /* Controls */
+  .controls { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
   .row { display: flex; gap: 12px; }
   .field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
   .field.full { flex: unset; width: 100%; }
@@ -76,12 +95,9 @@
   input {
     font-family: 'DM Sans', sans-serif;
     font-size: 18px; font-weight: 500;
-    color: var(--navy);
-    background: var(--sand);
-    border: 2px solid transparent;
-    border-radius: 12px;
-    padding: 11px 14px;
-    width: 100%; outline: none;
+    color: var(--navy); background: var(--sand);
+    border: 2px solid transparent; border-radius: 12px;
+    padding: 11px 14px; width: 100%; outline: none;
     -webkit-appearance: none; appearance: none;
   }
   input:focus { border-color: var(--aqua); background-color: #f0fafd; }
@@ -89,10 +105,13 @@
 
   .hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
+  /* Depth rows */
+  #depthFlat, #depthSloped { display: flex; flex-direction: column; gap: 14px; }
+
+  /* Result */
   .result-wrap {
     background: linear-gradient(135deg, var(--navy) 0%, #0077b6 100%);
-    margin: 0 24px 24px;
-    border-radius: 16px; padding: 18px 20px;
+    margin: 0 24px 24px; border-radius: 16px; padding: 18px 20px;
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
   }
   .result-main { display: flex; flex-direction: column; }
@@ -106,9 +125,8 @@
     text-transform: uppercase; color: var(--aqua); margin-top: 4px;
   }
   .result-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 15px; color: rgba(255,255,255,0.5);
-    text-align: right; white-space: nowrap;
+    font-family: 'DM Mono', monospace; font-size: 15px;
+    color: rgba(255,255,255,0.5); text-align: right; white-space: nowrap;
   }
   .result-sub span {
     display: block; font-size: 11px; text-transform: uppercase;
@@ -119,18 +137,20 @@
 <body>
 
 <div class="header">
-  <h1>McNab Pool Calculator<br> © Stuart McNab Minton 2026. All rights reserved.</h1>
-  <p>How much water do you need? <br> ¿Cuánta agua necesitas?</p>
+  <h1>Pool Fill Calculator</h1>
+  <p>How much water do you need?</p>
 </div>
 
 <div class="card">
 
+  <!-- SVG diagram -->
   <div class="pool-wrap">
     <div class="pool-label">
-      Top-down view <span id="dimLabel">5m × 9m</span>
+      <span id="viewLabel">Top-down view</span>
+      <span id="dimLabel">5m × 9m</span>
     </div>
     <div class="pool-svg-wrap">
-      <svg id="poolSvg" width="260" height="140" viewBox="0 0 260 140">
+      <svg id="poolSvg" width="280" height="140" viewBox="0 0 280 140">
         <defs>
           <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#48cae4"/>
@@ -151,20 +171,55 @@
             <path d="M0,3 L6,0 L6,6 Z" fill="#0096c7"/>
           </marker>
         </defs>
-        <rect id="poolOuter" x="0" y="0" width="260" height="140" rx="10" fill="#b8dce8"/>
-        <rect id="poolInner" x="10" y="10" width="240" height="120" rx="6" fill="url(#tiles)"/>
-        <rect id="poolWater" x="10" y="10" width="240" height="120" rx="6" fill="url(#waterGrad)" opacity="0.82"/>
-        <line id="lane1" x1="10" y1="50" x2="250" y2="50" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
-        <line id="lane2" x1="10" y1="90" x2="250" y2="90" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
-        <line id="dimLineH" x1="10" y1="134" x2="250" y2="134" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
-        <text id="wLabel" x="130" y="131" text-anchor="middle" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500">9 m</text>
-        <line id="dimLineV" x1="255" y1="10" x2="255" y2="130" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
-        <text id="hLabel" x="259" y="74" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500" writing-mode="tb">5 m</text>
+
+        <!-- TOP-DOWN VIEW (flat mode) -->
+        <g id="svgTopDown">
+          <rect id="tdOuter" x="2" y="2" width="244" height="124" rx="10" fill="#b8dce8"/>
+          <rect id="tdInner" x="12" y="12" width="224" height="104" rx="6" fill="url(#tiles)"/>
+          <rect id="tdWater" x="12" y="12" width="224" height="104" rx="6" fill="url(#waterGrad)" opacity="0.82"/>
+          <line id="tdLane1" x1="12" y1="47" x2="236" y2="47" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
+          <line id="tdLane2" x1="12" y1="81" x2="236" y2="81" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
+          <!-- dimension lines -->
+          <line id="tdDimH" x1="12" y1="132" x2="236" y2="132" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
+          <text id="tdWLbl" x="124" y="129" text-anchor="middle" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500">9 m</text>
+          <line id="tdDimV" x1="248" y1="12" x2="248" y2="116" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
+          <text id="tdHLbl" x="252" y="68" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500" writing-mode="tb">5 m</text>
+        </g>
+
+        <!-- SIDE / CROSS-SECTION VIEW (sloped mode) -->
+        <g id="svgSide" style="display:none">
+          <!-- pool shell (trapezoid) -->
+          <polygon id="sideShell" points="10,10 250,10 250,120 10,120" fill="#b8dce8" stroke="none"/>
+          <!-- water fill (sloped) -->
+          <polygon id="sideWater" points="10,10 250,10 250,120 10,120" fill="url(#waterGrad)" opacity="0.85"/>
+          <!-- pool floor line -->
+          <line id="sideFloor" x1="10" y1="120" x2="250" y2="120" stroke="#7ab8cc" stroke-width="2"/>
+          <!-- shallow depth arrow -->
+          <line id="sideArrowS" x1="30" y1="10" x2="30" y2="80" stroke="white" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>
+          <text id="sideLblS" x="34" y="50" fill="white" font-size="10" font-family="DM Mono,monospace" font-weight="500" opacity="0.9">0.9m</text>
+          <!-- deep depth arrow -->
+          <line id="sideArrowD" x1="230" y1="10" x2="230" y2="120" stroke="white" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>
+          <text id="sideLblD" x="235" y="70" fill="white" font-size="10" font-family="DM Mono,monospace" font-weight="500" opacity="0.9">1.8m</text>
+          <!-- length label -->
+          <line id="sideDimH" x1="10" y1="132" x2="250" y2="132" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
+          <text id="sideLenLbl" x="130" y="129" text-anchor="middle" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500">9 m</text>
+          <!-- labels -->
+          <text x="10" y="8" fill="#5a7f90" font-size="9" font-family="DM Sans,sans-serif">Shallow</text>
+          <text x="210" y="8" fill="#5a7f90" font-size="9" font-family="DM Sans,sans-serif">Deep</text>
+        </g>
+
       </svg>
     </div>
   </div>
 
+  <!-- Mode toggle -->
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="btnFlat" onclick="setMode('flat')">Flat bottom</button>
+    <button class="toggle-btn" id="btnSloped" onclick="setMode('sloped')">Shallow + Deep end</button>
+  </div>
+
   <div class="controls">
+    <!-- Width + Length (always shown) -->
     <div class="row">
       <div class="field">
         <label for="inpWidth">Width (m)</label>
@@ -177,12 +232,30 @@
     </div>
     <p class="hint">Use a comma or full stop for decimals — e.g. 6,5 or 6.5</p>
 
-    <div class="field full">
-      <label for="depth">Depth (m)</label>
-      <input id="depth" type="text" inputmode="decimal" placeholder="e.g. 1,5" oninput="updateAll()">
+    <!-- Flat depth -->
+    <div id="depthFlat">
+      <div class="field full">
+        <label for="depth">Depth (m)</label>
+        <input id="depth" type="text" inputmode="decimal" placeholder="e.g. 1,5" oninput="updateAll()">
+      </div>
+    </div>
+
+    <!-- Sloped depths -->
+    <div id="depthSloped" style="display:none">
+      <div class="row">
+        <div class="field">
+          <label for="depthShallow">Shallow end (m)</label>
+          <input id="depthShallow" type="text" inputmode="decimal" placeholder="e.g. 0,9" oninput="updateAll()">
+        </div>
+        <div class="field">
+          <label for="depthDeep">Deep end (m)</label>
+          <input id="depthDeep" type="text" inputmode="decimal" placeholder="e.g. 1,8" oninput="updateAll()">
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Result -->
   <div class="result-wrap">
     <div class="result-main">
       <div class="result-num" id="litres">0</div>
@@ -197,80 +270,126 @@
 </div>
 
 <script>
+  let mode = 'flat';
+
   function parseVal(str) {
     return parseFloat(String(str).replace(',', '.'));
   }
 
-  function updateSvg(w, l) {
+  function setMode(m) {
+    mode = m;
+    document.getElementById('btnFlat').classList.toggle('active', m === 'flat');
+    document.getElementById('btnSloped').classList.toggle('active', m === 'sloped');
+    document.getElementById('depthFlat').style.display   = m === 'flat'   ? 'flex' : 'none';
+    document.getElementById('depthSloped').style.display = m === 'sloped' ? 'flex' : 'none';
+    document.getElementById('svgTopDown').style.display  = m === 'flat'   ? ''     : 'none';
+    document.getElementById('svgSide').style.display     = m === 'sloped' ? ''     : 'none';
+    document.getElementById('viewLabel').textContent = m === 'flat' ? 'Top-down view' : 'Side view (cross-section)';
+    updateAll();
+  }
+
+  function updateTopDown(w, l) {
     const maxW = 230, maxH = 110;
     const scale = Math.min(maxW / Math.max(w, l), maxH / Math.max(w, l));
     const svgW = Math.round(l * scale);
     const svgH = Math.round(w * scale);
     const padX = Math.round((260 - svgW) / 2);
-    const padY = Math.round((140 - svgH) / 2);
+    const padY = Math.round((128 - svgH) / 2);
 
-    const outer = document.getElementById('poolOuter');
-    const inner = document.getElementById('poolInner');
-    const water = document.getElementById('poolWater');
-    const lane1 = document.getElementById('lane1');
-    const lane2 = document.getElementById('lane2');
-    const dimH  = document.getElementById('dimLineH');
-    const dimV  = document.getElementById('dimLineV');
-    const wLbl  = document.getElementById('wLabel');
-    const hLbl  = document.getElementById('hLabel');
-    const dimLbl= document.getElementById('dimLabel');
+    const set = (id, attrs) => { const el = document.getElementById(id); Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v)); };
 
-    outer.setAttribute('x', padX - 8);  outer.setAttribute('y', padY - 8);
-    outer.setAttribute('width', svgW + 16); outer.setAttribute('height', svgH + 16);
+    set('tdOuter', {x: padX-8, y: padY-8, width: svgW+16, height: svgH+16});
+    ['tdInner','tdWater'].forEach(id => set(id, {x: padX, y: padY, width: svgW, height: svgH}));
 
-    [inner, water].forEach(el => {
-      el.setAttribute('x', padX); el.setAttribute('y', padY);
-      el.setAttribute('width', svgW); el.setAttribute('height', svgH);
-    });
-
-    const t1 = padY + svgH / 3, t2 = padY + 2 * svgH / 3;
-    lane1.setAttribute('x1', padX); lane1.setAttribute('x2', padX + svgW);
-    lane1.setAttribute('y1', t1);   lane1.setAttribute('y2', t1);
-    lane2.setAttribute('x1', padX); lane2.setAttribute('x2', padX + svgW);
-    lane2.setAttribute('y1', t2);   lane2.setAttribute('y2', t2);
+    const t1 = padY + svgH/3, t2 = padY + 2*svgH/3;
+    set('tdLane1', {x1:padX, x2:padX+svgW, y1:t1, y2:t1});
+    set('tdLane2', {x1:padX, x2:padX+svgW, y1:t2, y2:t2});
 
     const lineY = padY + svgH + 10;
-    dimH.setAttribute('x1', padX); dimH.setAttribute('x2', padX + svgW);
-    dimH.setAttribute('y1', lineY); dimH.setAttribute('y2', lineY);
-    wLbl.setAttribute('x', padX + svgW / 2);
-    wLbl.setAttribute('y', lineY - 3);
-    wLbl.textContent = l + ' m';
+    set('tdDimH', {x1:padX, x2:padX+svgW, y1:lineY, y2:lineY});
+    set('tdWLbl', {x: padX+svgW/2, y: lineY-3});
+    document.getElementById('tdWLbl').textContent = l + ' m';
 
     const lineX = padX + svgW + 10;
-    dimV.setAttribute('x1', lineX); dimV.setAttribute('x2', lineX);
-    dimV.setAttribute('y1', padY);  dimV.setAttribute('y2', padY + svgH);
-    hLbl.setAttribute('x', lineX + 4);
-    hLbl.setAttribute('y', padY + svgH / 2 + 15);
-    hLbl.textContent = w + ' m';
+    set('tdDimV', {x1:lineX, x2:lineX, y1:padY, y2:padY+svgH});
+    set('tdHLbl', {x: lineX+4, y: padY+svgH/2+15});
+    document.getElementById('tdHLbl').textContent = w + ' m';
+  }
 
-    dimLbl.textContent = w + 'm × ' + l + 'm';
+  function updateSideView(l, shallow, deep) {
+    // SVG canvas: surface = y:10, canvas bottom = y:120, canvasH = 110px
+    // In SVG y increases DOWNWARD, so deeper = higher y number
+    const canvasH = 110;
+    const maxD = Math.max(shallow || 1, deep || 2, 0.1);
+    const scale = canvasH / maxD;
+
+    // Shallow floor is closer to surface (smaller y offset), deep floor further down (larger y offset)
+    const floorShallowY = 10 + Math.min(shallow > 0 ? shallow * scale : canvasH * 0.4, canvasH);
+    const floorDeepY    = 10 + Math.min(deep    > 0 ? deep    * scale : canvasH * 0.9, canvasH);
+
+    const shell = document.getElementById('sideShell');
+    const water = document.getElementById('sideWater');
+    const floor = document.getElementById('sideFloor');
+
+    // Pool shell: top-left, top-right, floor-right (deep), floor-left (shallow)
+    const pts = `10,10 250,10 250,${floorDeepY} 10,${floorShallowY}`;
+    shell.setAttribute('points', pts);
+    water.setAttribute('points', pts);
+    floor.setAttribute('x1', 10); floor.setAttribute('y1', floorShallowY);
+    floor.setAttribute('x2', 250); floor.setAttribute('y2', floorDeepY);
+
+    // Shallow depth arrow: from surface (y=10) to floor at shallow end
+    const sAS = document.getElementById('sideArrowS');
+    sAS.setAttribute('y1', 10); sAS.setAttribute('y2', floorShallowY);
+    const sLS = document.getElementById('sideLblS');
+    sLS.setAttribute('y', (10 + floorShallowY) / 2 + 4);
+    sLS.textContent = (shallow > 0 ? shallow : '?') + 'm';
+
+    // Deep depth arrow
+    const sAD = document.getElementById('sideArrowD');
+    sAD.setAttribute('y1', 10); sAD.setAttribute('y2', floorDeepY);
+    const sLD = document.getElementById('sideLblD');
+    sLD.setAttribute('y', (10 + floorDeepY) / 2 + 4);
+    sLD.textContent = (deep > 0 ? deep : '?') + 'm';
+
+    // Length label
+    document.getElementById('sideLenLbl').textContent = (l > 0 ? l : '?') + ' m';
   }
 
   function updateAll() {
     const w = parseVal(document.getElementById('inpWidth').value);
     const l = parseVal(document.getElementById('inpLength').value);
-    const depth = parseVal(document.getElementById('depth').value);
     const litresEl = document.getElementById('litres');
     const cubicEl  = document.getElementById('cubic');
 
-    if (!isNaN(w) && w > 0 && !isNaN(l) && l > 0) {
-      updateSvg(w, l);
-    }
+    document.getElementById('dimLabel').textContent =
+      (!isNaN(w) && !isNaN(l)) ? w + 'm × ' + l + 'm' : '— × —';
 
-    if (isNaN(w) || isNaN(l) || isNaN(depth) || w <= 0 || l <= 0 || depth <= 0) {
-      litresEl.textContent = '0';
-      cubicEl.textContent  = '— m³';
-      return;
-    }
+    if (mode === 'flat') {
+      if (!isNaN(w) && w > 0 && !isNaN(l) && l > 0) updateTopDown(w, l);
 
-    const m3 = w * l * depth;
-    litresEl.textContent = (m3 * 1000).toLocaleString(undefined, {maximumFractionDigits: 0});
-    cubicEl.textContent  = m3.toLocaleString(undefined, {maximumFractionDigits: 2}) + ' m³';
+      const depth = parseVal(document.getElementById('depth').value);
+      if (isNaN(w)||isNaN(l)||isNaN(depth)||w<=0||l<=0||depth<=0) {
+        litresEl.textContent = '0'; cubicEl.textContent = '— m³'; return;
+      }
+      const m3 = w * l * depth;
+      litresEl.textContent = (m3*1000).toLocaleString(undefined,{maximumFractionDigits:0});
+      cubicEl.textContent  = m3.toLocaleString(undefined,{maximumFractionDigits:2}) + ' m³';
+
+    } else {
+      const shallow = parseVal(document.getElementById('depthShallow').value);
+      const deep    = parseVal(document.getElementById('depthDeep').value);
+      updateSideView(l > 0 ? l : 9, shallow > 0 ? shallow : 0, deep > 0 ? deep : 0);
+
+      if (isNaN(w)||isNaN(l)||isNaN(shallow)||isNaN(deep)||w<=0||l<=0||shallow<=0||deep<=0) {
+        litresEl.textContent = '0'; cubicEl.textContent = '— m³'; return;
+      }
+      // Volume of a prism: L × W × average depth
+      const avgDepth = (shallow + deep) / 2;
+      const m3 = w * l * avgDepth;
+      litresEl.textContent = (m3*1000).toLocaleString(undefined,{maximumFractionDigits:0});
+      cubicEl.textContent  = m3.toLocaleString(undefined,{maximumFractionDigits:2}) + ' m³';
+    }
   }
 
   updateAll();
