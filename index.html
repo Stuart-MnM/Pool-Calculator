@@ -19,6 +19,8 @@
     --sand:  #fdf6ec;
     --muted: #5a7f90;
     --white: #ffffff;
+    --teal:  #0a9396;
+    --teal-lt: #e4f4f4;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -63,10 +65,7 @@
   #poolSvg { display: block; overflow: visible; }
 
   /* Toggle */
-  .toggle-wrap {
-    padding: 16px 24px 0;
-    display: flex; gap: 8px;
-  }
+  .toggle-wrap { padding: 16px 24px 0; display: flex; gap: 8px; }
   .toggle-btn {
     flex: 1; padding: 10px 8px;
     font-family: 'DM Sans', sans-serif;
@@ -76,13 +75,10 @@
     cursor: pointer; transition: all .18s;
     -webkit-appearance: none; appearance: none; outline: none;
   }
-  .toggle-btn.active {
-    background: var(--navy); color: var(--white);
-    border-color: var(--navy);
-  }
+  .toggle-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
 
   /* Controls */
-  .controls { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .controls { padding: 16px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
   .row { display: flex; gap: 12px; }
   .field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
   .field.full { flex: unset; width: 100%; }
@@ -92,7 +88,7 @@
     letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
   }
 
-  input {
+  input[type="text"] {
     font-family: 'DM Sans', sans-serif;
     font-size: 18px; font-weight: 500;
     color: var(--navy); background: var(--sand);
@@ -100,38 +96,99 @@
     padding: 11px 14px; width: 100%; outline: none;
     -webkit-appearance: none; appearance: none;
   }
-  input:focus { border-color: var(--aqua); background-color: #f0fafd; }
-  input::placeholder { color: #b0c8d4; }
+  input[type="text"]:focus { border-color: var(--aqua); background-color: #f0fafd; }
+  input[type="text"]::placeholder { color: #b0c8d4; }
 
   .hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  /* Depth rows */
   #depthFlat, #depthSloped { display: flex; flex-direction: column; gap: 14px; }
 
-  /* Result */
+  /* ── Results area ─────────────────────────────────── */
+  .results { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 10px; }
+
+  /* Water result */
   .result-wrap {
     background: linear-gradient(135deg, var(--navy) 0%, #0077b6 100%);
-    margin: 0 24px 24px; border-radius: 16px; padding: 18px 20px;
+    border-radius: 16px; padding: 16px 18px;
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
   }
   .result-main { display: flex; flex-direction: column; }
   .result-num {
     font-family: 'DM Mono', monospace;
-    font-size: 34px; font-weight: 500; color: var(--white);
+    font-size: 32px; font-weight: 500; color: var(--white);
     line-height: 1; letter-spacing: -1px;
   }
   .result-unit {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--aqua); margin-top: 4px;
   }
   .result-sub {
-    font-family: 'DM Mono', monospace; font-size: 15px;
+    font-family: 'DM Mono', monospace; font-size: 14px;
     color: rgba(255,255,255,0.5); text-align: right; white-space: nowrap;
   }
   .result-sub span {
-    display: block; font-size: 11px; text-transform: uppercase;
+    display: block; font-size: 10px; text-transform: uppercase;
     letter-spacing: 0.08em; color: rgba(255,255,255,0.35); margin-bottom: 2px;
   }
+
+  /* Tile result */
+  .tile-wrap {
+    background: linear-gradient(135deg, var(--teal) 0%, #00b4ab 100%);
+    border-radius: 16px; padding: 16px 18px;
+  }
+  .tile-top {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .tile-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 32px; font-weight: 500; color: var(--white);
+    line-height: 1; letter-spacing: -1px;
+  }
+  .tile-unit {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #a0ede9; margin-top: 4px;
+  }
+  .tile-breakdown {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    color: rgba(255,255,255,0.55); text-align: right; white-space: nowrap;
+    line-height: 1.6;
+  }
+  .tile-breakdown span {
+    display: block; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: rgba(255,255,255,0.35); margin-bottom: 2px;
+  }
+
+  /* Wastage toggle */
+  .wastage-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+  }
+  .wastage-label {
+    font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .wastage-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--white); font-weight: 500;
+  }
+
+  /* iOS-style toggle switch */
+  .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.25);
+    border-radius: 24px; transition: .25s;
+  }
+  .slider:before {
+    position: absolute; content: "";
+    height: 18px; width: 18px; left: 3px; bottom: 3px;
+    background: white; border-radius: 50%; transition: .25s;
+  }
+  input:checked + .slider { background: #a0ede9; }
+  input:checked + .slider:before { transform: translateX(18px); }
 </style>
 </head>
 <body>
@@ -172,42 +229,33 @@
           </marker>
         </defs>
 
-        <!-- TOP-DOWN VIEW (flat mode) -->
+        <!-- TOP-DOWN VIEW -->
         <g id="svgTopDown">
           <rect id="tdOuter" x="2" y="2" width="244" height="124" rx="10" fill="#b8dce8"/>
           <rect id="tdInner" x="12" y="12" width="224" height="104" rx="6" fill="url(#tiles)"/>
           <rect id="tdWater" x="12" y="12" width="224" height="104" rx="6" fill="url(#waterGrad)" opacity="0.82"/>
           <line id="tdLane1" x1="12" y1="47" x2="236" y2="47" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
           <line id="tdLane2" x1="12" y1="81" x2="236" y2="81" stroke="white" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.45"/>
-          <!-- dimension lines -->
           <line id="tdDimH" x1="12" y1="132" x2="236" y2="132" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
           <text id="tdWLbl" x="124" y="129" text-anchor="middle" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500">9 m</text>
           <line id="tdDimV" x1="248" y1="12" x2="248" y2="116" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
           <text id="tdHLbl" x="252" y="68" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500" writing-mode="tb">5 m</text>
         </g>
 
-        <!-- SIDE / CROSS-SECTION VIEW (sloped mode) -->
+        <!-- SIDE VIEW -->
         <g id="svgSide" style="display:none">
-          <!-- pool shell (trapezoid) -->
-          <polygon id="sideShell" points="10,10 250,10 250,120 10,120" fill="#b8dce8" stroke="none"/>
-          <!-- water fill (sloped) -->
+          <polygon id="sideShell" points="10,10 250,10 250,120 10,120" fill="#b8dce8"/>
           <polygon id="sideWater" points="10,10 250,10 250,120 10,120" fill="url(#waterGrad)" opacity="0.85"/>
-          <!-- pool floor line -->
           <line id="sideFloor" x1="10" y1="120" x2="250" y2="120" stroke="#7ab8cc" stroke-width="2"/>
-          <!-- shallow depth arrow -->
           <line id="sideArrowS" x1="30" y1="10" x2="30" y2="80" stroke="white" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>
           <text id="sideLblS" x="34" y="50" fill="white" font-size="10" font-family="DM Mono,monospace" font-weight="500" opacity="0.9">0.9m</text>
-          <!-- deep depth arrow -->
           <line id="sideArrowD" x1="230" y1="10" x2="230" y2="120" stroke="white" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>
           <text id="sideLblD" x="235" y="70" fill="white" font-size="10" font-family="DM Mono,monospace" font-weight="500" opacity="0.9">1.8m</text>
-          <!-- length label -->
           <line id="sideDimH" x1="10" y1="132" x2="250" y2="132" stroke="#0096c7" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr2)"/>
           <text id="sideLenLbl" x="130" y="129" text-anchor="middle" fill="#03045e" font-size="10" font-family="DM Mono,monospace" font-weight="500">9 m</text>
-          <!-- labels -->
           <text x="10" y="8" fill="#5a7f90" font-size="9" font-family="DM Sans,sans-serif">Shallow</text>
           <text x="210" y="8" fill="#5a7f90" font-size="9" font-family="DM Sans,sans-serif">Deep</text>
         </g>
-
       </svg>
     </div>
   </div>
@@ -219,7 +267,6 @@
   </div>
 
   <div class="controls">
-    <!-- Width + Length (always shown) -->
     <div class="row">
       <div class="field">
         <label for="inpWidth">Width (m)</label>
@@ -232,7 +279,6 @@
     </div>
     <p class="hint">Use a comma or full stop for decimals — e.g. 6,5 or 6.5</p>
 
-    <!-- Flat depth -->
     <div id="depthFlat">
       <div class="field full">
         <label for="depth">Depth (m)</label>
@@ -240,7 +286,6 @@
       </div>
     </div>
 
-    <!-- Sloped depths -->
     <div id="depthSloped" style="display:none">
       <div class="row">
         <div class="field">
@@ -255,18 +300,48 @@
     </div>
   </div>
 
-  <!-- Result -->
-  <div class="result-wrap">
-    <div class="result-main">
-      <div class="result-num" id="litres">0</div>
-      <div class="result-unit">Litres</div>
-    </div>
-    <div class="result-sub">
-      <span>Volume</span>
-      <span id="cubic">— m³</span>
-    </div>
-  </div>
+  <!-- Results -->
+  <div class="results">
 
+    <!-- Water -->
+    <div class="result-wrap">
+      <div class="result-main">
+        <div class="result-num" id="litres">0</div>
+        <div class="result-unit">Litres</div>
+      </div>
+      <div class="result-sub">
+        <span>Volume</span>
+        <span id="cubic">— m³</span>
+      </div>
+    </div>
+
+    <!-- Tiling -->
+    <div class="tile-wrap">
+      <div class="tile-top">
+        <div class="result-main">
+          <div class="tile-num" id="tileM2">—</div>
+          <div class="tile-unit">m² to tile</div>
+        </div>
+        <div class="tile-breakdown">
+          <span>Breakdown</span>
+          <div id="tileBreakdown">—</div>
+        </div>
+      </div>
+
+      <!-- Wastage toggle -->
+      <div class="wastage-row">
+        <div class="wastage-label">
+          <label class="switch">
+            <input type="checkbox" id="wastageToggle" onchange="updateAll()">
+            <span class="slider"></span>
+          </label>
+          +10% wastage allowance
+        </div>
+        <div class="wastage-val" id="wastageVal"></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
@@ -274,6 +349,10 @@
 
   function parseVal(str) {
     return parseFloat(String(str).replace(',', '.'));
+  }
+
+  function fmt(n, dp=2) {
+    return n.toLocaleString(undefined, {maximumFractionDigits: dp});
   }
 
   function setMode(m) {
@@ -291,105 +370,122 @@
   function updateTopDown(w, l) {
     const maxW = 230, maxH = 110;
     const scale = Math.min(maxW / Math.max(w, l), maxH / Math.max(w, l));
-    const svgW = Math.round(l * scale);
-    const svgH = Math.round(w * scale);
-    const padX = Math.round((260 - svgW) / 2);
-    const padY = Math.round((128 - svgH) / 2);
-
+    const svgW = Math.round(l * scale), svgH = Math.round(w * scale);
+    const padX = Math.round((260 - svgW) / 2), padY = Math.round((128 - svgH) / 2);
     const set = (id, attrs) => { const el = document.getElementById(id); Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v)); };
-
-    set('tdOuter', {x: padX-8, y: padY-8, width: svgW+16, height: svgH+16});
-    ['tdInner','tdWater'].forEach(id => set(id, {x: padX, y: padY, width: svgW, height: svgH}));
-
-    const t1 = padY + svgH/3, t2 = padY + 2*svgH/3;
-    set('tdLane1', {x1:padX, x2:padX+svgW, y1:t1, y2:t1});
-    set('tdLane2', {x1:padX, x2:padX+svgW, y1:t2, y2:t2});
-
-    const lineY = padY + svgH + 10;
-    set('tdDimH', {x1:padX, x2:padX+svgW, y1:lineY, y2:lineY});
-    set('tdWLbl', {x: padX+svgW/2, y: lineY-3});
+    set('tdOuter', {x:padX-8, y:padY-8, width:svgW+16, height:svgH+16});
+    ['tdInner','tdWater'].forEach(id => set(id, {x:padX, y:padY, width:svgW, height:svgH}));
+    const t1 = padY+svgH/3, t2 = padY+2*svgH/3;
+    set('tdLane1',{x1:padX,x2:padX+svgW,y1:t1,y2:t1});
+    set('tdLane2',{x1:padX,x2:padX+svgW,y1:t2,y2:t2});
+    const lineY = padY+svgH+10;
+    set('tdDimH',{x1:padX,x2:padX+svgW,y1:lineY,y2:lineY});
+    set('tdWLbl',{x:padX+svgW/2,y:lineY-3});
     document.getElementById('tdWLbl').textContent = l + ' m';
-
-    const lineX = padX + svgW + 10;
-    set('tdDimV', {x1:lineX, x2:lineX, y1:padY, y2:padY+svgH});
-    set('tdHLbl', {x: lineX+4, y: padY+svgH/2+15});
+    const lineX = padX+svgW+10;
+    set('tdDimV',{x1:lineX,x2:lineX,y1:padY,y2:padY+svgH});
+    set('tdHLbl',{x:lineX+4,y:padY+svgH/2+15});
     document.getElementById('tdHLbl').textContent = w + ' m';
   }
 
   function updateSideView(l, shallow, deep) {
-    // SVG canvas: surface = y:10, canvas bottom = y:120, canvasH = 110px
-    // In SVG y increases DOWNWARD, so deeper = higher y number
     const canvasH = 110;
-    const maxD = Math.max(shallow || 1, deep || 2, 0.1);
+    const maxD = Math.max(shallow||1, deep||2, 0.1);
     const scale = canvasH / maxD;
-
-    // Shallow floor is closer to surface (smaller y offset), deep floor further down (larger y offset)
-    const floorShallowY = 10 + Math.min(shallow > 0 ? shallow * scale : canvasH * 0.4, canvasH);
-    const floorDeepY    = 10 + Math.min(deep    > 0 ? deep    * scale : canvasH * 0.9, canvasH);
-
-    const shell = document.getElementById('sideShell');
-    const water = document.getElementById('sideWater');
-    const floor = document.getElementById('sideFloor');
-
-    // Pool shell: top-left, top-right, floor-right (deep), floor-left (shallow)
+    const floorShallowY = 10 + Math.min(shallow > 0 ? shallow*scale : canvasH*0.4, canvasH);
+    const floorDeepY    = 10 + Math.min(deep    > 0 ? deep   *scale : canvasH*0.9, canvasH);
     const pts = `10,10 250,10 250,${floorDeepY} 10,${floorShallowY}`;
-    shell.setAttribute('points', pts);
-    water.setAttribute('points', pts);
-    floor.setAttribute('x1', 10); floor.setAttribute('y1', floorShallowY);
-    floor.setAttribute('x2', 250); floor.setAttribute('y2', floorDeepY);
-
-    // Shallow depth arrow: from surface (y=10) to floor at shallow end
+    document.getElementById('sideShell').setAttribute('points', pts);
+    document.getElementById('sideWater').setAttribute('points', pts);
+    const fl = document.getElementById('sideFloor');
+    fl.setAttribute('x1',10); fl.setAttribute('y1',floorShallowY);
+    fl.setAttribute('x2',250); fl.setAttribute('y2',floorDeepY);
     const sAS = document.getElementById('sideArrowS');
-    sAS.setAttribute('y1', 10); sAS.setAttribute('y2', floorShallowY);
-    const sLS = document.getElementById('sideLblS');
-    sLS.setAttribute('y', (10 + floorShallowY) / 2 + 4);
-    sLS.textContent = (shallow > 0 ? shallow : '?') + 'm';
-
-    // Deep depth arrow
+    sAS.setAttribute('y1',10); sAS.setAttribute('y2',floorShallowY);
+    document.getElementById('sideLblS').setAttribute('y',(10+floorShallowY)/2+4);
+    document.getElementById('sideLblS').textContent = (shallow>0?shallow:'?')+'m';
     const sAD = document.getElementById('sideArrowD');
-    sAD.setAttribute('y1', 10); sAD.setAttribute('y2', floorDeepY);
-    const sLD = document.getElementById('sideLblD');
-    sLD.setAttribute('y', (10 + floorDeepY) / 2 + 4);
-    sLD.textContent = (deep > 0 ? deep : '?') + 'm';
+    sAD.setAttribute('y1',10); sAD.setAttribute('y2',floorDeepY);
+    document.getElementById('sideLblD').setAttribute('y',(10+floorDeepY)/2+4);
+    document.getElementById('sideLblD').textContent = (deep>0?deep:'?')+'m';
+    document.getElementById('sideLenLbl').textContent = (l>0?l:'?')+' m';
+  }
 
-    // Length label
-    document.getElementById('sideLenLbl').textContent = (l > 0 ? l : '?') + ' m';
+  function calcTileArea(w, l, depth, shallow, deep) {
+    // Returns {floor, longWalls, shortWalls, total} in m²
+    let floor, longWalls, shallowWall, deepWall, shortWalls;
+    if (mode === 'flat') {
+      floor      = w * l;
+      longWalls  = 2 * l * depth;   // two long sides
+      shortWalls = 2 * w * depth;   // two short ends
+      return {
+        floor, longWalls, shortWalls,
+        total: floor + longWalls + shortWalls,
+        breakdown: `Floor ${fmt(floor)} + Walls ${fmt(longWalls+shortWalls)}`
+      };
+    } else {
+      floor      = w * l;
+      longWalls  = 2 * l * ((shallow+deep)/2);  // trapezoid side walls
+      shallowWall = w * shallow;
+      deepWall    = w * deep;
+      shortWalls  = shallowWall + deepWall;
+      return {
+        floor, longWalls, shortWalls,
+        total: floor + longWalls + shortWalls,
+        breakdown: `Floor ${fmt(floor)} + Walls ${fmt(longWalls+shortWalls)}`
+      };
+    }
   }
 
   function updateAll() {
     const w = parseVal(document.getElementById('inpWidth').value);
     const l = parseVal(document.getElementById('inpLength').value);
+    const wastage = document.getElementById('wastageToggle').checked;
     const litresEl = document.getElementById('litres');
     const cubicEl  = document.getElementById('cubic');
+    const tileEl   = document.getElementById('tileM2');
+    const brkEl    = document.getElementById('tileBreakdown');
+    const wastageEl= document.getElementById('wastageVal');
 
     document.getElementById('dimLabel').textContent =
-      (!isNaN(w) && !isNaN(l)) ? w + 'm × ' + l + 'm' : '— × —';
+      (!isNaN(w) && !isNaN(l)) ? w+'m × '+l+'m' : '— × —';
+
+    let m3, tileArea;
 
     if (mode === 'flat') {
-      if (!isNaN(w) && w > 0 && !isNaN(l) && l > 0) updateTopDown(w, l);
-
+      if (!isNaN(w) && w>0 && !isNaN(l) && l>0) updateTopDown(w, l);
       const depth = parseVal(document.getElementById('depth').value);
       if (isNaN(w)||isNaN(l)||isNaN(depth)||w<=0||l<=0||depth<=0) {
-        litresEl.textContent = '0'; cubicEl.textContent = '— m³'; return;
+        litresEl.textContent='0'; cubicEl.textContent='— m³';
+        tileEl.textContent='—'; brkEl.textContent='—'; wastageEl.textContent='';
+        return;
       }
-      const m3 = w * l * depth;
-      litresEl.textContent = (m3*1000).toLocaleString(undefined,{maximumFractionDigits:0});
-      cubicEl.textContent  = m3.toLocaleString(undefined,{maximumFractionDigits:2}) + ' m³';
+      m3 = w * l * depth;
+      tileArea = calcTileArea(w, l, depth, null, null);
 
     } else {
       const shallow = parseVal(document.getElementById('depthShallow').value);
       const deep    = parseVal(document.getElementById('depthDeep').value);
-      updateSideView(l > 0 ? l : 9, shallow > 0 ? shallow : 0, deep > 0 ? deep : 0);
-
+      updateSideView(l>0?l:9, shallow>0?shallow:0, deep>0?deep:0);
       if (isNaN(w)||isNaN(l)||isNaN(shallow)||isNaN(deep)||w<=0||l<=0||shallow<=0||deep<=0) {
-        litresEl.textContent = '0'; cubicEl.textContent = '— m³'; return;
+        litresEl.textContent='0'; cubicEl.textContent='— m³';
+        tileEl.textContent='—'; brkEl.textContent='—'; wastageEl.textContent='';
+        return;
       }
-      // Volume of a prism: L × W × average depth
-      const avgDepth = (shallow + deep) / 2;
-      const m3 = w * l * avgDepth;
-      litresEl.textContent = (m3*1000).toLocaleString(undefined,{maximumFractionDigits:0});
-      cubicEl.textContent  = m3.toLocaleString(undefined,{maximumFractionDigits:2}) + ' m³';
+      m3 = w * l * ((shallow+deep)/2);
+      tileArea = calcTileArea(w, l, null, shallow, deep);
     }
+
+    // Water
+    litresEl.textContent = fmt(m3*1000, 0);
+    cubicEl.textContent  = fmt(m3) + ' m³';
+
+    // Tiling
+    const base = tileArea.total;
+    const withWastage = base * 1.10;
+    tileEl.textContent = fmt(wastage ? withWastage : base);
+    brkEl.textContent  = tileArea.breakdown;
+    wastageEl.textContent = wastage ? `(+${fmt(withWastage - base)} m²)` : '';
   }
 
   updateAll();
